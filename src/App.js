@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends React.Component {
+  onClickData = () => {
+    axios
+      .post(`https://dev.teledirectasia.com:3092/`)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>TDCX Malaysia</h1>
+        <button
+          style={{
+            padding: '10px',
+            marginTop: '10px',
+            background: '#000',
+            color: '#fff',
+          }}
+          onClick={this.onClickData}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          Get Data
+        </button>
+      </div>
+    );
+  }
 }
 
 export default App;
