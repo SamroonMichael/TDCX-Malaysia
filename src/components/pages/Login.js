@@ -1,8 +1,8 @@
 import React from 'react';
-import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import request from '../../util/request';
+import * as session from '../../util/session';
 import Dashboard from './Dashboard';
-import * as session from '../util/session';
+import { Redirect } from 'react-router-dom';
 
 import { Container, Form, Button, Card } from 'react-bootstrap';
 
@@ -10,11 +10,12 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '', // 5c3f4f02edd4ac85
+      token: {},
+      id: '',
       name: '',
       user: {},
       isLoggedOut: true,
-      showDashboard: true,
+      showDashboard: false,
     };
   }
 
@@ -33,21 +34,22 @@ class Login extends React.Component {
       name: this.state.name,
       apiKey: this.state.id,
     };
-    axios
-      .request({
-        url: 'https://dev.teledirectasia.com:3092/login',
-        method: 'POST',
-        data: data,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res) {
-          this.setState({
-            showDashboard: true,
-            isLoggedOut: false,
-            user: { name: this.state.name },
-          });
-        }
+    request({
+      url: 'https://dev.teledirectasia.com:3092/login',
+      method: 'POST',
+      data: data,
+      withCredentials: false,
+    })
+      .then((response) => {
+        console.log(response);
+        session.setToken(response.token.token);
+        this.setState({
+          token: response.token,
+          user: { name: response.token.name, img: response.image },
+          showDashboard: true,
+          isLoggedOut: false,
+          user: { name: this.name },
+        });
       })
       .catch((err) => console.log(`This is the ${err}`));
   };
@@ -87,7 +89,7 @@ class Login extends React.Component {
                 <Card.Body>
                   <Form>
                     <h4>Login</h4>
-                    <Form.Group controlId="formBasicEmail">
+                    <Form.Group controlId="formBasicId">
                       <Form.Control
                         type="text"
                         placeholder="Id"
@@ -118,7 +120,10 @@ class Login extends React.Component {
             ) : null}
 
             {this.state.showDashboard ? (
-              <Dashboard user={this.state.user} />
+              <Redirect to="/dashboard">
+                {' '}
+                <Dashboard />
+              </Redirect>
             ) : null}
           </div>
         </Container>

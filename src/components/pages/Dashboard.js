@@ -1,27 +1,45 @@
 import React from 'react';
-import axios from 'axios';
+import request from '../../util/request';
+import * as session from '../../util/session';
 import { Link } from 'react-router-dom';
+import TaskModal from '../TaskModal';
+import TaskList from '../layout/TaskList';
+// import MainDashboard from '../MainDashboard';
 
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Card, Button, ButtonToolbar } from 'react-bootstrap';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = { task: null };
+    this.state = {
+      task: null,
+      taskModlShow: false,
+    };
   }
 
   componentDidMount = () => {
-    axios
-      .request({
-        url: 'https://dev.teledirectasia.com:3092/dashboard',
-        method: 'GET',
-      })
-      .then((res) => {
-        console.log(res);
-        this.setState({ tasks: res });
-      })
-      .catch((err) => console.log(`This is the ${err}`));
+    request({
+      url: 'https://dev.teledirectasia.com:3092/dashboard',
+      method: 'GET',
+      withCredentials: false,
+    }).then((response) => {
+      console.log(response);
+      this.setState({
+        tasks: response,
+      });
+    });
+  };
+
+  onLogout = () => {
+    session.logout();
+    this.setState({
+      showDashboard: false,
+      showLogin: true,
+    });
+  };
+
+  taskModlClose = () => {
+    this.setState({ taskModlShow: false });
   };
 
   render() {
@@ -47,15 +65,14 @@ class Dashboard extends React.Component {
               >
                 <h1>Welcome </h1>
                 <Link
+                  onClick={this.onLogout}
                   to="/"
                   style={{ marginLeft: 'auto', order: '2', lineHeight: '2.5' }}
                 >
                   LogOut
                 </Link>
               </Card.Header>
-              <Card.Body
-                style={{ height: '100vh', backgroundColor: 'rgba(0,0,0,.03)' }}
-              >
+              <Card.Body style={{ backgroundColor: 'rgba(0,0,0,.03)' }}>
                 <div
                   style={{
                     height: '100%',
@@ -77,12 +94,30 @@ class Dashboard extends React.Component {
                       background: '#fff',
                     }}
                   >
-                    <p>You have no task.</p>
-                    <Button variant="primary">New Task</Button>
+                    <p>You have no task</p>
+                    {/* <Button variant="primary">New Task</Button> */}
+                    <Button
+                      variant="primary"
+                      onClick={() => this.setState({ taskModlShow: true })}
+                    >
+                      New Task
+                    </Button>
+                    <TaskModal
+                      show={this.state.taskModlShow}
+                      onHide={this.taskModlClose}
+                    />
                   </div>
+                  <br />
+                  <br />
+                  {/* <TodoList /> */}
                 </div>
               </Card.Body>
             </Card>
+
+            {/* <MainDashboard /> */}
+            <br />
+
+            <TaskList />
           </div>
         </Container>
       </React.Fragment>
