@@ -2,7 +2,7 @@ import React from 'react';
 import request from '../../util/request';
 import * as session from '../../util/session';
 import { Link } from 'react-router-dom';
-import TaskModal from '../TaskModal';
+// import TaskModal from '../../components';
 import TaskList from '../layout/TaskList';
 // import MainDashboard from '../MainDashboard';
 
@@ -102,10 +102,10 @@ class Dashboard extends React.Component {
                     >
                       New Task
                     </Button>
-                    <TaskModal
+                    {/* <TaskModal
                       show={this.state.taskModlShow}
                       onHide={this.taskModlClose}
-                    />
+                    /> */}
                   </div>
                   <br />
                   <br />

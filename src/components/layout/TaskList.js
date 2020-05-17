@@ -17,7 +17,7 @@ class TaskList extends React.Component {
     }).then((response) => {
       console.log(response.tasks);
       this.setState({
-        tasks: response.tasks,
+        tasks: response,
       });
     });
   };
@@ -28,10 +28,13 @@ class TaskList extends React.Component {
 
   render() {
     console.log(this.state);
-
+    // const tasks = this.state.tasks.map((task) => task.name);
     return (
       <div>
         <p>{this.state.tasks.msg}</p>
+        {/* <ul>
+          <li>{tasks}</li>
+        </ul> */}
         {/* <ul>{this.generateLatestTaskList}</ul> */}
         {/* Tasks Message: {this.state.tasks.msg}
         <br />
