@@ -8,6 +8,8 @@ class TaskList extends React.Component {
     super(props);
 
     this.state = { tasks: { msg: '', tasks: [], _id: [] } };
+
+    // this.handleRemoveTask = this.handleRemoveTask.bind(this);
   }
 
   getTasks = () => {
@@ -21,16 +23,12 @@ class TaskList extends React.Component {
     });
   };
 
-  componentWillMount = () => {
-    console.log(this.state);
-  };
-
   componentDidMount = () => {
     this.getTasks();
   };
 
   // Remove itmes
-  handleRemoveTask = (props) => {
+  handleRemoveTask = () => {
     const id = this.state.tasks.tasks._id;
     request({
       url: `https://dev.teledirectasia.com:3092/tasks/${id}`,
@@ -42,17 +40,15 @@ class TaskList extends React.Component {
   };
 
   render() {
-    // const test = this.state.tasks.tasks.map(
-    //   (task) => `Task Name: ${task.name} and Task ID: ${task._id}`
-    // );
-
     console.log(this.state.tasks);
 
     const tasks = this.state.tasks.tasks.map((task) => {
       return (
         <div>
           <div key={task._id}>{task.name}</div>
-          <button onClick={this.handleRemoveTask}>Rmove</button>
+          <button onClick={this.handleRemoveTask.bind(this, task._id)}>
+            Rmove
+          </button>
         </div>
       );
     });
@@ -67,7 +63,7 @@ class TaskList extends React.Component {
         <div>
           {/* <TaskItem list={tasks} /> */}
           <AddTask addItem={this.getTasks} />
-          <button onClick={this.handleRemoveTask}>Remove Task</button>
+          <button>Remove Task</button>
         </div>
         <br />
         <br />
