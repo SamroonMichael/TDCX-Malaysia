@@ -1,5 +1,7 @@
 import React from 'react';
 import request from '../../util/request';
+import TaskItem from './TaskItem';
+import TaskList from './TaskItem';
 
 class AddTask extends React.Component {
   constructor(props) {
@@ -18,7 +20,7 @@ class AddTask extends React.Component {
       data: data,
       withCredentials: false,
     }).then((response) => {
-      // this.props.getTasks();
+      this.props.getTasks();
     });
   };
 
@@ -30,13 +32,16 @@ class AddTask extends React.Component {
     return (
       <React.Fragment>
         <div>
-          <input
-            type="text"
-            name="name"
-            value={this.state.name || ''}
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleAddTask}>Submit</button>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="text"
+              name="name"
+              value={this.state.name || ''}
+              onChange={this.handleChange}
+            />
+            <button onClick={this.handleAddTask}>Submit</button>
+          </form>
+          {/* <TaskList updateList={this.handleAddTask} /> */}
         </div>
       </React.Fragment>
     );
