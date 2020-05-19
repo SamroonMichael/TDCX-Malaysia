@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  list-style-type: none;
+  margin-bottom: 1.5rem;
+  border-bottom: 1.5px solid #f4f4f6;
+  padding: 0.6875rem;
+}
+
+.input-group-text {
+  margin-right: 10px;
+}
+
+.react-responsive-modal-modal {
+  width: 50%;
+  border-radius: 15px;
+}
+
+@media screen and (max-width: 992px) {
+  .react-responsive-modal-modal {
+    width: 100%;
+  }
+}

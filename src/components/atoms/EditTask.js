@@ -1,26 +1,27 @@
 import React from 'react';
 import request from '../../util/request';
-import TaskItem from './TaskItem';
-import TaskList from './TaskItem';
+
+import { Form, Button } from 'react-bootstrap';
 
 class AddTask extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { name: '' };
+    this.state = { name: this.props.taskName };
   }
 
-  handleAddTask = () => {
+  handleUpdateTask = (id) => {
     const data = {
       name: this.state.name,
+      completed: true,
     };
     request({
-      url: 'https://dev.teledirectasia.com:3092/tasks',
-      method: 'POST',
+      url: `https://dev.teledirectasia.com:3092/tasks/${this.props.taskId}`,
+      method: 'PUT',
       data: data,
       withCredentials: false,
     }).then((response) => {
-      this.props.getTasks();
+      this.props.getTask();
     });
   };
 
@@ -29,20 +30,23 @@ class AddTask extends React.Component {
   };
 
   render() {
+    // console.log(this.props.addItem);
     return (
       <React.Fragment>
-        <div>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <input
+        <Form onSubmit={(e) => e.preventDefault()}>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
               type="text"
               name="name"
               value={this.state.name || ''}
               onChange={this.handleChange}
+              style={{ width: 'auto' }}
             />
-            <button onClick={this.handleAddTask}>Submit</button>
-          </form>
-          {/* <TaskList updateList={this.handleAddTask} /> */}
-        </div>
+          </Form.Group>
+          <Button onClick={this.handleUpdateTask} variant="primary">
+            Update Task
+          </Button>
+        </Form>
       </React.Fragment>
     );
   }

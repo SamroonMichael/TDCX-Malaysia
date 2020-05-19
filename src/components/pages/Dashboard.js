@@ -2,17 +2,17 @@ import React from 'react';
 import request from '../../util/request';
 import * as session from '../../util/session';
 import { Link } from 'react-router-dom';
-// import TaskModal from '../../components';
 import TaskList from '../layout/TaskList';
-// import MainDashboard from '../MainDashboard';
+// import TaskList from '../layout/TaskList';
+// import NewTaskt from '../layout/NewTaskList';
 
-import { Container, Card, Button, ButtonToolbar } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      task: null,
+      tasks: { msg: '', tasks: [], _id: [], latestTask: [] },
       taskModlShow: false,
     };
   }
@@ -43,6 +43,23 @@ class Dashboard extends React.Component {
   };
 
   render() {
+    const tasksCompleted = this.state.tasks.tasksCompleted;
+    const totalTasks = this.state.tasks.totalTasks;
+
+    // console.log(
+    //   this.state.tasks.latestTasks.map((newTask) => {
+    //     return newTask.name;
+    //   })
+    // );
+    // console.log(this.state.tasks.totalTasks);
+    // console.log(this.state.tasks.msg);
+
+    // const newTask = this.state.tasks.latestTasks.map(latestTask => {
+    //   return (
+    //   <li>{latestTask.name}</li>
+    //   )
+    // });
+
     return (
       <React.Fragment>
         <Container style={{ height: '100vh' }} fluid>
@@ -55,23 +72,27 @@ class Dashboard extends React.Component {
               flexDirection: 'column',
             }}
           >
-            <Card>
-              <Card.Header
+            <Card.Header
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                backgroundColor: '#fff',
+              }}
+            >
+              <h3>Welcome</h3>
+              <Link
+                onClick={this.onLogout}
+                to="/"
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  backgroundColor: '#fff',
+                  marginLeft: 'auto',
+                  order: '2',
+                  lineHeight: '2.5',
                 }}
               >
-                <h1>Welcome </h1>
-                <Link
-                  onClick={this.onLogout}
-                  to="/"
-                  style={{ marginLeft: 'auto', order: '2', lineHeight: '2.5' }}
-                >
-                  LogOut
-                </Link>
-              </Card.Header>
+                LogOut
+              </Link>
+            </Card.Header>
+            {this.state.tasks.totalTasks === 0 ? (
               <Card.Body style={{ backgroundColor: 'rgba(0,0,0,.03)' }}>
                 <div
                   style={{
@@ -95,34 +116,25 @@ class Dashboard extends React.Component {
                     }}
                   >
                     <p>You have no task</p>
-                    {/* <Button variant="primary">New Task</Button> */}
                     <Button
                       variant="primary"
                       onClick={() => this.setState({ taskModlShow: true })}
                     >
                       New Task
                     </Button>
-                    {/* <TaskModal
-                      show={this.state.taskModlShow}
-                      onHide={this.taskModlClose}
-                    /> */}
                   </div>
-                  <br />
-                  <br />
-                  {/* <TodoList /> */}
                 </div>
               </Card.Body>
-            </Card>
-
-            {/* <MainDashboard /> */}
-            <br />
-
-            <TaskList />
+            ) : (
+              <TaskList
+                tasksCompleted={tasksCompleted}
+                totalTasks={totalTasks}
+              />
+            )}
           </div>
         </Container>
       </React.Fragment>
     );
   }
 }
-
 export default Dashboard;
