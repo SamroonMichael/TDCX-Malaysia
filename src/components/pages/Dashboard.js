@@ -26,7 +26,6 @@ class Dashboard extends React.Component {
       method: 'GET',
       withCredentials: false,
     }).then((response) => {
-      console.log(response);
       this.setState({ tasks: response });
     });
   };
@@ -37,7 +36,6 @@ class Dashboard extends React.Component {
       method: 'GET',
       withCredentials: false,
     }).then((response) => {
-      console.log(response);
       this.setState({ tasks: response, taskModlShow: false });
     });
 

@@ -41,7 +41,6 @@ class Login extends React.Component {
       withCredentials: false,
     })
       .then((response) => {
-        console.log(response);
         session.setToken(response.token.token);
         this.setState({
           token: response.token,

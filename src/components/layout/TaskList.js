@@ -14,7 +14,6 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import { FaTrash, FaPen } from 'react-icons/fa';
-// import AddTask from '../components/atoms/AddTask';
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -34,7 +33,6 @@ class TaskList extends React.Component {
       method: 'GET',
       withCredentials: false,
     }).then((response) => {
-      console.log(response);
       this.setState({ tasks: response, taskModlShow: false });
     });
   };
@@ -72,7 +70,6 @@ class TaskList extends React.Component {
       data: data,
       withCredentials: false,
     }).then((response) => {
-      // this.props.addItem();
       this.getTasks();
     });
 
@@ -116,7 +113,7 @@ class TaskList extends React.Component {
   };
 
   /********************************************/
-  // Update Task
+  // Update Task // FUNCTION HAS A BUG
   handleListEdit = (id) => {
     let tasks = this.state.tasks;
     let editTask = tasks.tasks.filter(function (task) {
@@ -133,7 +130,6 @@ class TaskList extends React.Component {
       data: data,
       withCredentials: false,
     }).then((response) => {
-      //   this.props.getTask();
       this.setState(
         {
           addMode: false,
@@ -161,19 +157,14 @@ class TaskList extends React.Component {
       data: tasks,
       withCredentials: false,
     }).then((response) => {
-      //   this.props.getTask();
       this.getTasks();
     });
-    console.log(tasks);
-
     return tasks;
   };
 
   /********************************************/
 
   render() {
-    // console.log(this.state);
-
     // Loop List
     const tasksList = this.state.tasks.tasks.map((task) => {
       return (
