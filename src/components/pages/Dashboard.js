@@ -3,10 +3,10 @@ import request from '../../util/request';
 import * as session from '../../util/session';
 import { Link } from 'react-router-dom';
 import TaskList from '../layout/TaskList';
-// import TaskList from '../layout/TaskList';
-// import NewTaskt from '../layout/NewTaskList';
+import AddTask from '../atoms/AddTask';
+// import { Modal } from 'react-responsive-modal';
 
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Card, Button, Form } from 'react-bootstrap';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -14,6 +14,7 @@ class Dashboard extends React.Component {
     this.state = {
       tasks: { msg: '', tasks: [], _id: [], latestTask: [] },
       taskModlShow: false,
+      addTaskModal: false,
     };
   }
 
@@ -38,27 +39,24 @@ class Dashboard extends React.Component {
     });
   };
 
-  taskModlClose = () => {
-    this.setState({ taskModlShow: false });
+  // taskModlClose = () => {
+  //   this.setState({ taskModlShow: false });
+  // };
+
+  onOpenModalAdd = () => {
+    this.setState({ addTaskModal: true });
+  };
+
+  onCloseModalAddclose = () => {
+    this.setState({ addTaskModal: false });
   };
 
   render() {
     const tasksCompleted = this.state.tasks.tasksCompleted;
     const totalTasks = this.state.tasks.totalTasks;
+    const latestTask = this.state.tasks;
 
-    // console.log(
-    //   this.state.tasks.latestTasks.map((newTask) => {
-    //     return newTask.name;
-    //   })
-    // );
-    // console.log(this.state.tasks.totalTasks);
-    // console.log(this.state.tasks.msg);
-
-    // const newTask = this.state.tasks.latestTasks.map(latestTask => {
-    //   return (
-    //   <li>{latestTask.name}</li>
-    //   )
-    // });
+    console.log(latestTask.msg);
 
     return (
       <React.Fragment>
@@ -116,12 +114,11 @@ class Dashboard extends React.Component {
                     }}
                   >
                     <p>You have no task</p>
-                    <Button
-                      variant="primary"
-                      onClick={() => this.setState({ taskModlShow: true })}
-                    >
-                      New Task
-                    </Button>
+                    <AddTask
+                      addItems={this.handleAddTask}
+                      addTaskInput={this.handleChangeAddTask}
+                      addTaskVal={this.state.name}
+                    />
                   </div>
                 </div>
               </Card.Body>
@@ -129,6 +126,7 @@ class Dashboard extends React.Component {
               <TaskList
                 tasksCompleted={tasksCompleted}
                 totalTasks={totalTasks}
+                // latestTask={lTask}
               />
             )}
           </div>
