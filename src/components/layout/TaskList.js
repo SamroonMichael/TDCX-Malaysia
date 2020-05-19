@@ -1,9 +1,7 @@
 import React from 'react';
 import request from '../../util/request';
 import { Modal } from 'react-responsive-modal';
-import TopPanel from './TopPanelTask';
 import Search from '../atoms/SearchBox';
-import AddTask from '../atoms/AddTask';
 
 import 'react-responsive-modal/styles.css';
 
@@ -18,7 +16,7 @@ import {
 import { FaTrash, FaPen } from 'react-icons/fa';
 // import AddTask from '../components/atoms/AddTask';
 
-class API extends React.Component {
+class TaskList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -27,7 +25,6 @@ class API extends React.Component {
       name: '',
       addTaskModal: false,
       editTaskModal: false,
-      isEditing: false,
     };
   }
 
@@ -47,8 +44,7 @@ class API extends React.Component {
   };
 
   /********************************************/
-  // Modals Toggle
-
+  // On Change Methods
   onOpenModalEdit = () => {
     this.setState({ editTaskModal: true });
   };
@@ -56,6 +52,14 @@ class API extends React.Component {
   onCloseModalEditclose = () => {
     this.setState({ editTaskModal: false });
   };
+
+  onOpenModalAdd = () => {
+    this.setState({ addTaskModal: true });
+  };
+  onCloseModalAddclose = () => {
+    this.setState({ addTaskModal: false });
+  };
+
   /********************************************/
   // Add Tasks
   handleAddTask = () => {
@@ -81,38 +85,6 @@ class API extends React.Component {
   handleChangeAddTask = (e) => {
     this.setState({ name: e.target.value });
   };
-  /********************************************/
-  // // Update task
-  // handleUpdateTask = (id) => {
-  //   const data = {
-  //     name: this.state.name,
-  //     completed: true,
-  //   };
-  //   request({
-  //     url: `https://dev.teledirectasia.com:3092/tasks/${this.props.taskId}`,
-  //     method: 'PUT',
-  //     data: data,
-  //     withCredentials: false,
-  //   }).then((response) => {
-  //     //   this.props.getTask();
-  //     this.getTasks();
-  //   });
-  // };
-
-  // handleChangeUpdateTask = (e) => {
-  //   this.setState({ name: e.target.value });
-  // };
-
-  // handleListEdit = (id) => {
-  //   const name = 'John Test'; // Find in the task array with same as id
-  //   this.setState({
-  //     addMode: false,
-  //     taskModlShow: true,
-  //     editTaskId: id,
-  //     editTaskName: name,
-  //   });
-  // };
-
   /********************************************/
   // Remove task
   handleRemoveTask = (id) => {
@@ -145,23 +117,16 @@ class API extends React.Component {
 
   /********************************************/
   // Update Task
-  handleListUpdate = (id) => {
-    // let tasks = this.state.tasks;
-    let updateTask = this.state.tasks.tasks.map((task) => task._id);
-
-    // const name = updateTask.name;
-
-    console.log(updateTask);
-
-    console.log(this.state.tasks.tasks.map((task) => task._id));
-
+  handleListEdit = (id) => {
+    let tasks = this.state.tasks;
+    let editTask = tasks.tasks.filter(function (task) {
+      return task._id === id;
+    });
+    const name = editTask.name;
     const data = {
-      name: this.state.name,
-      completed: true,
-      id: updateTask,
+      name: name,
     };
 
-    console.log(data);
     request({
       url: `https://dev.teledirectasia.com:3092/tasks/${id}`,
       method: 'PUT',
@@ -169,7 +134,15 @@ class API extends React.Component {
       withCredentials: false,
     }).then((response) => {
       //   this.props.getTask();
-      this.getTasks();
+      this.setState(
+        {
+          addMode: false,
+          taskModlShow: true,
+          editTaskId: id,
+          editTaskName: name,
+        },
+        this.getTasks()
+      );
     });
   };
 
@@ -180,7 +153,6 @@ class API extends React.Component {
   // Mark Completed
   markedCompleted = (id) => {
     const tasks = {
-      name: this.state.name,
       completed: true,
     };
     request({
@@ -210,7 +182,9 @@ class API extends React.Component {
             onClick={this.markedCompleted.bind(this, task._id)}
             style={{ marginRight: '0.3rem' }}
           />
-          <span className={task.completed ? 'johhDoe' : ''}>{task.name}</span>
+          <span className={task.completed ? 'strikethrough' : ''}>
+            {task.name}
+          </span>
           <span style={{ marginLeft: 'auto', order: 2, cursor: 'pointer' }}>
             <FaPen
               style={{ marginRight: '1rem' }}
@@ -226,23 +200,6 @@ class API extends React.Component {
 
     return (
       <React.Fragment>
-        {/* Top Panel */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: '10px',
-          }}
-        >
-          <TopPanel title="Task completed">
-            <span style={{ fontSize: '2rem', color: '#007bff' }}>
-              {this.props.tasksCompleted}
-            </span>
-            <span style={{ color: '#949494' }}>/{this.props.totalTasks}</span>
-          </TopPanel>
-          <TopPanel title="Latest Create Task">{this.props.lTask}</TopPanel>
-        </div>
-
         {/* Add new Task Form & Search */}
         <div
           style={{
@@ -257,11 +214,42 @@ class API extends React.Component {
           }}
         >
           <Search onSearchTask={this.handleSearchTask} />
-          <AddTask
-            addItems={this.handleAddTask}
-            addTaskInput={this.handleChangeAddTask}
-            addTaskVal={this.state.name}
-          />
+          <Button
+            onClick={this.onOpenModalAdd}
+            variant="primary"
+            style={{ marginLeft: '0.7rem' }}
+          >
+            Add Task
+          </Button>
+          <Modal
+            open={this.state.addTaskModal}
+            onClose={this.onCloseModalAddclose}
+            center
+          >
+            <Form
+              onSubmit={(e) => e.preventDefault()}
+              style={{
+                display: 'flex',
+                flexFlow: 'column wrap',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Form.Group controlId="formBasicEmail">
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={this.state.name}
+                  onChange={this.handleChangeAddTask}
+                  style={{ width: 'auto' }}
+                />
+              </Form.Group>
+              <Button onClick={this.handleAddTask} variant="primary">
+                New Task
+              </Button>
+            </Form>
+          </Modal>
         </div>
 
         {/* Show Task List */}
@@ -292,13 +280,7 @@ class API extends React.Component {
                 style={{ width: 'auto' }}
               />
             </Form.Group>
-            <Button
-              onClick={this.handleListUpdate.bind(
-                this,
-                this.state.tasks.tasks._id
-              )}
-              variant="primary"
-            >
+            <Button onClick={this.handleListEdit} variant="primary">
               Update Task
             </Button>
           </Form>
@@ -308,4 +290,4 @@ class API extends React.Component {
   }
 }
 
-export default API;
+export default TaskList;

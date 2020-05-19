@@ -13,7 +13,6 @@ class AddTask extends React.Component {
   onOpenModalAdd = () => {
     this.setState({ addTaskModal: true });
   };
-
   onCloseModalAddclose = () => {
     this.setState({ addTaskModal: false });
   };
